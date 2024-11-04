@@ -1,5 +1,5 @@
 GET http://localhost:5000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MTM2NTgsImV4cCI6MTczMDcxMzY4OCwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.FzEBdLsdTlqey2zsSYZ63zD_Wj4FpT139CbOBrzN-pw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MTUyNjEsImV4cCI6MTczMDcxNTI5MSwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.D-W2Ktiv-gUwPeQ2WHbi9_AxS45pEo1h8ABEMPk-TBI
 
 ###Login Route
 POST http://localhost:5000/auth/login
@@ -15,12 +15,17 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "mehretu1.abreham@gmail.com",
+    "email": "newuser.abreham@gmail.com",
     "password": "1234"
 }
 
 ###Refresh Token Route
 POST http://localhost:5000/auth/refresh-token
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MTQ5NDksImV4cCI6MTczMzMwNjk0OSwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.19MlVU3A4jX-xXJg-xYLKPjB7XHrnA7rzjrrTmZ87jk"
+}
 
 ###Logout Route
 DELETE http://localhost:5000/auth/logout
