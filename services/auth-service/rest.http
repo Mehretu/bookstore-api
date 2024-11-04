@@ -1,5 +1,5 @@
 GET http://localhost:5000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MTUyNjEsImV4cCI6MTczMDcxNTI5MSwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.D-W2Ktiv-gUwPeQ2WHbi9_AxS45pEo1h8ABEMPk-TBI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MjUxNzksImV4cCI6MTczMDcyNTIwOSwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.IWlkaHXpcDx8K6_eMT2wAFk_UGw02Ad93CpT7U1k4g4
 
 ###Login Route
 POST http://localhost:5000/auth/login
@@ -15,7 +15,7 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "newusers.abreham@gmail.com",
+    "email": "newusersm.abreham@gmail.com",
     "password": "1234"
 }
 
@@ -24,8 +24,13 @@ POST http://localhost:5000/auth/refresh-token
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MTQ5NDksImV4cCI6MTczMzMwNjk0OSwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.19MlVU3A4jX-xXJg-xYLKPjB7XHrnA7rzjrrTmZ87jk"
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MjUxMTUsImV4cCI6MTczMzMxNzExNSwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.JRnO0UxpmZQyGT4_35eMArHjc9MU_sO4B2mtNwtK60I"
 }
 
 ###Logout Route
 DELETE http://localhost:5000/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MjQ0NjIsImV4cCI6MTczMzMxNjQ2MiwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.k04HcOnTW6YKN7Ry3Ouy6SOBiIuqe2fS2j5oqq6qYJ8"
+}
