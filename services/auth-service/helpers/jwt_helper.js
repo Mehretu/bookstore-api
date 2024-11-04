@@ -9,7 +9,7 @@ module.exports = {
             }
             const secret = process.env.ACCESS_TOKEN_SECRET
             const options = {
-                expiresIn: "15s",
+                expiresIn: "30s",
                 issuer: "mehretu.com",
                 audience: userId
             }
@@ -30,7 +30,15 @@ module.exports = {
         const token = bearerToken[1]
 
         JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
-            if(err) return next(createError.Unauthorized())
+            if(err) {
+                // if(err.name === 'JsonWebTokenError') {
+                //     return next(createError.Unauthorized())
+                // }else{
+                //     return next(createError.Unauthorized(err.message))
+                // }    
+                 const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message
+                 return next(createError.Unauthorized(message))   
+            }
             req.payload = payload
             next()
         })
