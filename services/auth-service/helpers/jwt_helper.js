@@ -3,9 +3,11 @@ const createError = require('http-errors')
 const client = require('./init_redis')
 
 module.exports = {
-    signAccessToken: (userId) => {
+    signAccessToken: (userId, role) => {
         return new Promise((resolve, reject) => {
             const payload = {
+                userId,
+                role
                 
             }
             const secret = process.env.ACCESS_TOKEN_SECRET

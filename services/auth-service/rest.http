@@ -8,6 +8,7 @@ Content-Type: application/json
 {
     "email": "mehretu.abreham@gmail.com",
     "password": "1234"
+    
 }
 
 ###Register Route
@@ -15,8 +16,9 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "newusersm.abreham@gmail.com",
-    "password": "1234"
+    "email": "newuserwithrole.abreham@gmail.com",
+    "password": "1234",
+    "role": "admin"
 }
 
 ###Refresh Token Route

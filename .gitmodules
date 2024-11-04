@@ -1,0 +1,6 @@
+[submodule "bookstore-shared"]
+	path = bookstore-shared
+	url = git@github.com:Mehretu/bookstore-shared.git
+[submodule "shared"]
+	path = shared
+	url = git@github.com:Mehretu/bookstore-shared.git

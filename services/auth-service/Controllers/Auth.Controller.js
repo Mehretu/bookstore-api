@@ -17,7 +17,7 @@ module.exports = {
             
             const user = new User(result)
             const savedUser = await user.save()
-            const accessToken = await signAccessToken(savedUser.id)
+            const accessToken = await signAccessToken(savedUser.id, savedUser.role)
             const refreshToken = await signRefreshToken(savedUser.id)
     
             res.send({accessToken, refreshToken})
@@ -37,7 +37,7 @@ module.exports = {
             const isMatch = await user.isValidPassword(result.password)
             if(!isMatch) throw createError.Unauthorized('Username/password not valid')
             
-            const accessToken = await signAccessToken(user.id)
+            const accessToken = await signAccessToken(user.id, user.role)
             const refreshToken = await signRefreshToken(user.id)
             res.send({accessToken,refreshToken})
     
@@ -52,7 +52,8 @@ module.exports = {
             if(!refreshToken) throw createError.BadRequest()
     
             const userId = await verifyRefreshToken(refreshToken)
-            const accessToken = await signAccessToken(userId)
+            const user = await User.findById(userId)
+            const accessToken = await signAccessToken(userId,user.role)
             const newRefreshToken = await signRefreshToken(userId)
             res.send({accessToken, refreshToken: newRefreshToken})
     
