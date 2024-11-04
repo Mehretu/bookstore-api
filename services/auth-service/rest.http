@@ -2,6 +2,12 @@ GET http://localhost:5000
 
 ###Login Route
 POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "email": "mehretu.abreham@gmail.com",
+    "password": "1234"
+}
 
 ###Register Route
 POST http://localhost:5000/auth/register
