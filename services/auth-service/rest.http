@@ -1,4 +1,13 @@
 GET http://localhost:5000
 
-###
-GET http://localhost:5000/abc_xyz
+###Login Route
+POST http://localhost:5000/auth/login
+
+###Register Route
+POST http://localhost:5000/auth/register
+
+###Refresh Token Route
+POST http://localhost:5000/auth/refresh-token
+
+###Logout Route
+DELETE http://localhost:5000/auth/logout
