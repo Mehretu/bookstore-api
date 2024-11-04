@@ -1,13 +1,15 @@
 const JWT = require('jsonwebtoken')
 const createError = require('http-errors')
 const client = require('./init_redis')
+const {ROLES, PERMISSIONS} = require('../../../shared/auth')
 
 module.exports = {
-    signAccessToken: (userId, role) => {
+    signAccessToken: (userId, role = ROLES.USER) => {
         return new Promise((resolve, reject) => {
             const payload = {
                 userId,
-                role
+                role,
+                permissions: PERMISSIONS[role]
                 
             }
             const secret = process.env.ACCESS_TOKEN_SECRET
@@ -87,5 +89,33 @@ module.exports = {
                 })
             })
         })
+    },
+
+    checkRole: (allowedRoles) => (req, res, next) => {
+        try{
+            const userRole = req.payload.role
+            const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles]
+            if(!roles.includes(userRole))
+                throw createError.Forbidden(`Role ${userRole} is not allowed to access this resource`)
+            next()
+        }catch(error){
+            next(error)
+        }
+    },
+    checkPermission: (requiredPermission) => (req, res, next) => {
+        try{
+            const userRole = req.payload.role
+            const userPermissions = PERMISSIONS[userRole]
+
+            if(!userPermissions || !userPermissions.includes(requiredPermission)){
+                throw createError.Forbidden(`Permission ${requiredPermission} is not allowed to access this resource`)
+            }
+            next()
+        }catch(error){
+            next(error)
+        }
     }
+
+
+
 }

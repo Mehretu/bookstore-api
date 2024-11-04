@@ -3,6 +3,7 @@ const { unique } = require('next/dist/build/utils')
 const { type } = require('os')
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
+const {ROLES,PERMISSIONS} = require('../../../shared/auth')
 
 
 const UserSchema = new Schema({
@@ -18,8 +19,8 @@ const UserSchema = new Schema({
     },
     role:{
         type: String,
-        enum: ['admin', 'user'],
-        default: 'user'
+        enum: Object.values(ROLES),
+        default: ROLES.USER
     }
 })
 
@@ -41,6 +42,14 @@ UserSchema.methods.isValidPassword = async function (password){
     }catch(error){
         throw error
     }
+}
+
+UserSchema.methods.isAdmin = function(){
+    return this.role === ROLES.ADMIN
+}
+
+UserSchema.methods.hasPermission = function(permission){
+    return PERMISSIONS[this.role].includes(permission)
 }
 
 
