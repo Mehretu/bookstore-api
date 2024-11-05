@@ -1,16 +1,15 @@
 const router = require('express').Router()
 const BookController = require('../Controllers/Book.controller')
-const { verifyAccessToken } = require('../Middleware/auth_middleware')
+const { verifyAccessToken,checkRole } = require('../Middleware/auth_middleware')
 const { ROLES } = require('../../../../shared/auth')
-const { checkRole } = require('../Middleware/auth_middleware')
 // Public routes
 router.get('/', BookController.getBooks)
 router.get('/:id', BookController.getBookById)
 
-// Protected routes - Admin only
+
 router.post('/',
     verifyAccessToken,
-    checkRole(ROLES.ADMIN),  // Temporarily comment this out until we implement role checking
+    checkRole(ROLES.ADMIN), 
     BookController.createBook
 )
 

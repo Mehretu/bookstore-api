@@ -1,7 +1,7 @@
 ###Verify Token Route
 POST http://localhost:5000/auth/verify-token
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODM3NTQsImV4cCI6MTczMDc4NDM1NCwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.UElN7uazPEEk4AeznNSLIEnfoCXCugyRQuBC1D0ItGQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJhMjIwNDkzYzAyZGY2MmI4MjcwMTYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MTQ1NDYsImV4cCI6MTczMDgxNjM0NiwiYXVkIjoiNjcyYTIyMDQ5M2MwMmRmNjJiODI3MDE2IiwiaXNzIjoibWVocmV0dS5jb20ifQ.hWmSemm3M4dHtnkMFOJIL2dGn7qgrEO9gQDDPu5SUr0
 
 ###Root Route
 GET http://localhost:5000
@@ -11,9 +11,8 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "email": "vvssdrip.abreham@gmail.com",
-    "password": "1234",
-    "role": "admin"
+    "email": "abebe.abreham@gmail.com",
+    "password": "1234"
     
 }
 
@@ -24,7 +23,8 @@ Content-Type: application/json
 {
     "email": "abebe.abreham@gmail.com",
     "password": "1234",
-    "role": "user"
+    "name": "Abebe",
+    "role": "admin"
 }
 
 ###Refresh Token Route

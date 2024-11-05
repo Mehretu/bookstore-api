@@ -17,10 +17,15 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+
     role:{
         type: String,
         enum: Object.values(ROLES),
         default: ROLES.USER
+    },
+    name:{
+        type: String,
+        required: true
     }
 })
 
