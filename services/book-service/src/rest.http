@@ -1,0 +1,76 @@
+
+
+### Get all books
+GET http://localhost:6000/api/books
+Content-Type: application/json
+
+### Get a book by ID
+GET http://localhost:6000/api/books/:6729ac1f201e1eb7e4ad7716
+Content-Type: application/json
+
+### Create a book (with admin token)
+POST http://localhost:6000/api/books
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODQyNjIsImV4cCI6MTczMDc4NDg2MiwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.FaEBd242dd67wsE1hL2goZO1G48HZb7I7ZxmdSfT6PU
+
+{
+    "title": "The Great Gatsby",
+    "isbn": "978-0743273565",
+    "author": "F. Scott Fitzgerald",
+    "description": "A story of the fabulously wealthy Jay Gatsby",
+    "category": "FICTION",
+    "price": 9.99,
+    "metadata": {
+        "genre": ["Classic", "Literary Fiction"]
+    }
+}
+
+### Bulk create books
+POST http://localhost:6000/api/books/bulk
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+    "books": [
+        {
+            "title": "1984",
+            "isbn": "978-0451524935",
+            "author": "George Orwell",
+            "description": "A dystopian social science fiction novel.",
+            "category": "FICTION",
+            "price": 12.99,
+            "metadata": {
+                "genre": ["Dystopian", "Science Fiction"]
+            }
+        },
+        {
+            "title": "The Hobbit",
+            "isbn": "978-0547928227",
+            "author": "J.R.R. Tolkien",
+            "description": "A fantasy novel about the adventures of Bilbo Baggins.",
+            "category": "FICTION",
+            "price": 14.99,
+            "metadata": {
+                "genre": ["Fantasy", "Adventure"]
+            }
+        }
+    ]
+}
+
+### Update a book
+PUT http://localhost:6000/api/books/:id
+Content-Type: application/json
+Authorization: Bearer <access_token>
+
+{
+    "price": 11.99,
+    "description": "Updated description of the book."
+}
+
+### Delete a book
+DELETE http://localhost:6000/api/books/:id
+Authorization: Bearer <access_token>
+
+### Get books with filters
+GET http://localhost:6000/api/books?category=FICTION&page=1&limit=10&sortBy=price&sortOrder=desc
+Content-Type: application/json
