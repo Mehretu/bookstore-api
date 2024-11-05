@@ -9,13 +9,27 @@ module.exports = {
             const { type, payload } = event
             const io = socketConfig.getIO()
 
+            console.log('Received event:', { type, payload }) // Debug log
+
             switch (type) {
                 case 'NEW_BOOK':
                     const { book, interestedUsers } = payload
                     
+                    console.log('Processing new book notification:', {
+                        book,
+                        interestedUsers
+                    })
+
+                    if (!interestedUsers || interestedUsers.length === 0) {
+                        console.log('No interested users found')
+                        return
+                    }
+                    
                     // Create notifications for interested users
                     const notifications = await Promise.all(
                         interestedUsers.map(async (userId) => {
+                            console.log(`Creating notification for user: ${userId}`)
+
                             const notification = await Notification.create({
                                 userId,
                                 type: 'NEW_BOOK',
@@ -31,8 +45,16 @@ module.exports = {
                                 }
                             })
 
-                            // Emit to specific user
+                            console.log(`Emitting to user:${userId}`, notification)
+
+                            // Emit to both room and direct socket
                             io.to(`user:${userId}`).emit('new-book', {
+                                type: 'NEW_BOOK',
+                                notification
+                            })
+
+                            // Also emit to general room
+                            io.emit('notifications', {
                                 type: 'NEW_BOOK',
                                 notification
                             })
@@ -41,7 +63,7 @@ module.exports = {
                         })
                     )
 
-                    console.log(`Notifications created for ${notifications.length} interested users`)
+                    console.log(`Notifications created and emitted for ${notifications.length} users`)
                     break;
 
                 default:
