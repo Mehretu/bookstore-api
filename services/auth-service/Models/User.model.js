@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const { unique } = require('next/dist/build/utils')
-const { type } = require('os')
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 const {ROLES,PERMISSIONS} = require('../../../shared/auth')

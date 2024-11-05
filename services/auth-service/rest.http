@@ -11,8 +11,8 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "email": "abebe.abreham@gmail.com",
-    "password": "1234"
+    "email": "integrationService@bookstore.com",
+    "password": "secure_service_password"
     
 }
 
@@ -25,6 +25,17 @@ Content-Type: application/json
     "password": "1234",
     "name": "Abebe",
     "role": "admin"
+}
+
+###Register Service Route
+POST http://localhost:5000/auth/register-service
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJhMjIwNDkzYzAyZGY2MmI4MjcwMTYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MzI0NDMsImV4cCI6MTczMDgzNDI0MywiYXVkIjoiNjcyYTIyMDQ5M2MwMmRmNjJiODI3MDE2IiwiaXNzIjoibWVocmV0dS5jb20ifQ.r9PllVYBLTMXVj4J2BizedyazAZro7a-Z3v1hlHsQqU
+
+{
+    "email": "thirdparty@example.com",
+    "password": "secure_password",
+    "name": "Integration Service"
 }
 
 ###Refresh Token Route

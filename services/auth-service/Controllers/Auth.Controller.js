@@ -3,7 +3,48 @@ const User = require('../Models/User.model')
 const {authSchema, loginSchema} = require('../helpers/validation_schema')
 const {signAccessToken, signRefreshToken, verifyRefreshToken, verifyAccessToken} = require('../helpers/jwt_helper')
 const client = require('../helpers/init_redis')
+const { ROLES } = require('../../../shared/auth')
 module.exports = {
+    registerService: async (req, res, next) => {
+        try {
+            // Check payload instead of user
+            if (!req.payload || req.payload.role !== ROLES.ADMIN) {
+                throw createError.Unauthorized('Only admins can register service accounts')
+            }
+    
+            const { email, password, name } = req.body
+    
+            // Validate input
+            if (!email || !password || !name) {
+                throw createError.BadRequest('All fields are required')
+            }
+    
+            const exists = await User.findOne({ email })
+            if (exists) {
+                throw createError.Conflict('Service account already exists')
+            }
+    
+            const user = new User({
+                email,
+                password,
+                name,
+                role: ROLES.SERVICE
+            })
+            
+            const savedUser = await user.save()
+            
+            res.status(201).json({
+                message: 'Service account created successfully',
+                service: {
+                    email: savedUser.email,
+                    name: savedUser.name,
+                    role: savedUser.role
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
     register: async(req,res,next) => {
     
         try {
