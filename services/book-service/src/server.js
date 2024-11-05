@@ -6,6 +6,12 @@ require('./Config/init_mongodb')
 
 const app = express()
 
+// Add request logging middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`)
+    next()
+})
+
 // Middleware
 app.use(cors())
 app.use(express.json())
@@ -13,10 +19,10 @@ app.use(express.urlencoded({ extended: true }))
 
 // Routes
 const bookRoutes = require('./Routes/Book.route')
-// const reviewRoutes = require('./routes/Review.route')  // Uncomment when implementing reviews
+const reviewRoutes = require('./Routes/Review.route')
 
 app.use('/api/books', bookRoutes)
-// app.use('/api', reviewRoutes)  // Uncomment when implementing reviews
+app.use('/api/reviews', reviewRoutes)  
 
 // 404 handler
 app.use((req, res, next) => {

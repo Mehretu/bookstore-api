@@ -34,7 +34,7 @@ const BookSchema = new mongoose.Schema({
                 type:Number,
                 default:0
             },
-           reviewCout: {
+           reviewCount: {
                 type:Number,
                 default:0
             }
