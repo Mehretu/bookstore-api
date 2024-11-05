@@ -1,54 +1,63 @@
 const router = require('express').Router()
-const ReviewController = require('../controllers/Review.controller')
-const { verifyAccessToken } = require('../middleware/auth_middleware')
-const { ROLES } = require('../../../shared/auth')
+const ReviewController = require('../Controllers/Review.controller')
+const { verifyAccessToken } = require('../Middleware/auth_middleware')
+const { ROLES } = require('../../../../shared/auth')
 
-// Create review
-router.post('/books/:bookId/reviews',
+// Helper middleware for role checking
+const checkRole = (allowedRoles) => (req, res, next) => {
+    try {
+        const userRole = req.payload.role
+        if (!allowedRoles.includes(userRole)) {
+            throw createError.Forbidden(`Role ${userRole} is not allowed`)
+        }
+        next()
+    } catch (error) {
+        next(error)
+    }
+}
+
+router.post('/book/:bookId',
     verifyAccessToken,
     ReviewController.createReview
 )
 
 // Get reviews for a book
-router.get('/books/:bookId/reviews',
+router.get('book/:bookId',
     ReviewController.getBookReviews
 )
 
-// Update own review
-router.put('/reviews/:reviewId',
+// Other review routes stay the same
+router.put('/:reviewId',
     verifyAccessToken,
     ReviewController.updateReview
 )
 
-// Delete own review
-router.delete('/reviews/:reviewId',
+router.delete('/:reviewId',
     verifyAccessToken,
+    checkRole(ROLES.ADMIN),
     ReviewController.deleteReview
 )
 
-// Vote on review
-router.post('/reviews/:reviewId/vote',
+router.post('/:reviewId/vote',
     verifyAccessToken,
     ReviewController.voteReview
 )
 
-// Report review
-router.post('/reviews/:reviewId/report',
+router.post('/:reviewId/report',
     verifyAccessToken,
     ReviewController.reportReview
 )
 
-// Admin routes for handling reported reviews
-router.get('/reviews/reported',
+router.get('/reported',
     verifyAccessToken,
     checkRole(ROLES.ADMIN),
     ReviewController.getReportedReviews
 )
 
-router.put('/reviews/:reviewId/handle-report',
+router.put('/:reviewId/handle-report',
     verifyAccessToken,
     checkRole(ROLES.ADMIN),
     ReviewController.handleReportedReview
 )
 
-module.exports = router 
+module.exports = router
