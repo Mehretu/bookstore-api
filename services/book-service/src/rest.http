@@ -11,17 +11,17 @@ Content-Type: application/json
 ### Create a book (with admin token)
 POST http://localhost:6000/api/books
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5ZjVhNTc2YzkzYTgwODUxYmZiMGEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MDMxNDEsImV4cCI6MTczMDgwMzc0MSwiYXVkIjoiNjcyOWY1YTU3NmM5M2E4MDg1MWJmYjBhIiwiaXNzIjoibWVocmV0dS5jb20ifQ.QsEv6g3pwQVSuhmnlPGMqeC_OSKOkbiOJiB--UB7054
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5ZjVhNTc2YzkzYTgwODUxYmZiMGEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MDY2MzQsImV4cCI6MTczMDgwODQzNCwiYXVkIjoiNjcyOWY1YTU3NmM5M2E4MDg1MWJmYjBhIiwiaXNzIjoibWVocmV0dS5jb20ifQ.V9lzpRczWnOYaF851_OUdfOqCktmC5xgGV2YTZdUj5Q
 
 {
-    "title": "Quantum Physics Explained",
-    "author": "Robert Johnson",
-    "isbn": "978-1234567890",
+    "title": "Debug Test Book",
+    "author": "Test Author",
+    "isbn": "978-1234567891",
     "category": "SCIENCE",
-    "price": 34.99,
-    "description": "A deep dive into quantum physics concepts",
+    "price": 29.99,
+    "description": "Testing notifications",
     "metadata": {
-        "genre": ["Physics", "Quantum Mechanics"],
+        "genre": ["Testing"],
         "popularity": {
             "rating": 0,
             "reviewCount": 0
