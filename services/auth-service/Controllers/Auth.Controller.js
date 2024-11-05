@@ -1,7 +1,7 @@
 const createError = require('http-errors')
 const User = require('../Models/User.model')
 const {authSchema} = require('../helpers/validation_schema')
-const {signAccessToken, signRefreshToken, verifyRefreshToken} = require('../helpers/jwt_helper')
+const {signAccessToken, signRefreshToken, verifyRefreshToken, verifyAccessToken} = require('../helpers/jwt_helper')
 const client = require('../helpers/init_redis')
 module.exports = {
     register: async(req,res,next) => {
@@ -79,5 +79,11 @@ module.exports = {
         }catch(error){
             next(error)
         }
+    },
+    verifyToken: async(req, res, next) => {
+        verifyAccessToken(req, res, (err)=> {
+            if(err) return next(err)
+            res.json({payload: req.payload})
+        })
     }
 }

@@ -14,7 +14,7 @@ module.exports = {
             }
             const secret = process.env.ACCESS_TOKEN_SECRET
             const options = {
-                expiresIn: "30s",
+                expiresIn: "10m",
                 issuer: "mehretu.com",
                 audience: userId
             }

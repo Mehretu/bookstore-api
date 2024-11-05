@@ -1,13 +1,19 @@
-GET http://localhost:5000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzA3MjUxNzksImV4cCI6MTczMDcyNTIwOSwiYXVkIjoiNjcyODgzNzY4YTA1Y2E1NmZhZjQ0OWYwIiwiaXNzIjoibWVocmV0dS5jb20ifQ.IWlkaHXpcDx8K6_eMT2wAFk_UGw02Ad93CpT7U1k4g4
+###Verify Token Route
+POST http://localhost:5000/auth/verify-token
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODM3NTQsImV4cCI6MTczMDc4NDM1NCwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.UElN7uazPEEk4AeznNSLIEnfoCXCugyRQuBC1D0ItGQ
 
+###Root Route
+GET http://localhost:5000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODMwODQsImV4cCI6MTczMDc4MzY4NCwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ._GveNNpLYIo3pUjPqKt-GL0vQtGC4w-SmIMTAhNUBaA
 ###Login Route
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "email": "mehretu.abreham@gmail.com",
-    "password": "1234"
+    "email": "vvssdrip.abreham@gmail.com",
+    "password": "1234",
+    "role": "admin"
     
 }
 
@@ -16,7 +22,7 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "newuserwithrole.abreham@gmail.com",
+    "email": "vvssdrip.abreham@gmail.com",
     "password": "1234",
     "role": "admin"
 }
