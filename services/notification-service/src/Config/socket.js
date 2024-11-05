@@ -2,45 +2,60 @@ const socketIO = require('socket.io')
 
 let io
 
-module.exports = {
-    init: (server) => {
-        io = socketIO(server, {
-            cors: {
-                origin: "*",
-                methods: ["GET", "POST"]
-            }
+function init(server) {
+    io = socketIO(server, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
+    })
+
+    io.use((socket, next) => {
+        const token = socket.handshake.auth.token || 
+                     socket.handshake.headers.authorization?.split(' ')[1]
+
+        console.log('Socket connection attempt:', {
+            socketId: socket.id,
+            hasToken: !!token
         })
 
-        io.on('connection', (socket) => {
-            console.log('Client connected:', socket.id)
+        if (!token) {
+            console.log('No token provided for socket connection')
+            return next(new Error('Authentication token missing'))
+        }
 
-            // Handle category subscriptions
-            socket.on('subscribe-categories', (categories) => {
-                // Leave previous category rooms
-                Object.keys(socket.rooms).forEach(room => {
-                    if (room.startsWith('category:')) {
-                        socket.leave(room)
-                    }
-                })
+        // Store token in socket for later use
+        socket.token = token
+        next()
+    })
 
-                // Join new category rooms
-                categories.forEach(category => {
-                    socket.join(`category:${category}`)
-                })
+    io.on('connection', (socket) => {
+        console.log('New client connected:', socket.id)
 
-                console.log(`Client ${socket.id} subscribed to:`, categories)
-            })
+        // Join a room based on the token/user
+        if (socket.token) {
+            socket.join(`user:${socket.token}`)
+            console.log(`Socket ${socket.id} joined room user:${socket.token}`)
+        }
 
-            socket.on('disconnect', () => {
-                console.log('Client disconnected:', socket.id)
-            })
+        // Debug: Log all incoming events
+        socket.onAny((eventName, ...args) => {
+            console.log(`Received event "${eventName}":`, args)
         })
 
-        return io
-    },
+        socket.on('disconnect', () => {
+            console.log('Client disconnected:', socket.id)
+        })
+    })
 
-    getIO: () => {
-        if (!io) throw new Error('Socket.io not initialized')
-        return io
-    }
+    return io
 }
+
+function getIO() {
+    if (!io) {
+        throw new Error('Socket.io not initialized!')
+    }
+    return io
+}
+
+module.exports = { init, getIO }
