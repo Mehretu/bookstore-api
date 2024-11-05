@@ -11,8 +11,8 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "email": "integrationService@bookstore.com",
-    "password": "secure_service_password"
+    "email": "abebech.abreham@gmail.com",
+    "password": "1234"
     
 }
 
@@ -21,7 +21,7 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "abebe.abreham@gmail.com",
+    "email": "abebech.abreham@gmail.com",
     "password": "1234",
     "name": "Abebe",
     "role": "admin"

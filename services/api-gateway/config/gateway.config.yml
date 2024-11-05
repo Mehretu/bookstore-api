@@ -1,0 +1,76 @@
+http:
+  port: 9000
+
+admin:
+  port: 9001
+  host: localhost
+
+apiEndpoints:
+  auth:
+    host: localhost
+    paths: ['/auth/*']
+  books:
+    host: localhost
+    paths: ['/api/books*']
+  integration:
+    host: localhost
+    paths: ['/api/integrations*']
+  notifications:
+    host: localhost
+    paths: ['/api/notifications*']
+
+serviceEndpoints:
+  auth-service:
+    url: 'http://localhost:5000'
+  book-service:
+    url: 'http://localhost:6000'
+  integration-service:
+    url: 'http://localhost:8000'
+  notification-service:
+    url: 'http://localhost:6001'
+
+policies:
+  - proxy
+  - rate-limit
+  - log
+
+pipelines:
+  auth-pipeline:
+    apiEndpoints:
+      - auth
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: auth-service
+              changeOrigin: true
+              stripPath: false
+
+  books-pipeline:
+    apiEndpoints:
+      - books
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: book-service
+              changeOrigin: true
+              stripPath: false
+
+  integration-pipeline:
+    apiEndpoints:
+      - integration
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: integration-service
+              changeOrigin: true
+              stripPath: false
+
+  notifications-pipeline:
+    apiEndpoints:
+      - notifications
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: notification-service
+              changeOrigin: true
+              stripPath: false
