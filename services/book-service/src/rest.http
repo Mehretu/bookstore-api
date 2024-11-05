@@ -11,17 +11,17 @@ Content-Type: application/json
 ### Create a book (with admin token)
 POST http://localhost:6000/api/books
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODUyOTcsImV4cCI6MTczMDc4NTg5NywiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.fImd_zNSrgIOM92HcSj-Sy3G12RNmq3ULK-LZV9k6Wg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3OTE4MjksImV4cCI6MTczMDc5MjQyOSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.TUmZeQaEAwHgGoOJVomeHST4XsD5QZBI9UFzvnjQwaA
 
 {
-    "title": "The Great Gatsby",
-    "isbn": "978-0743273565",
-    "author": "F. Scott Fitzgerald",
-    "description": "A story of the fabulously wealthy Jay Gatsby",
-    "category": "FICTION",
-    "price": 9.99,
+    "title": "Professional JavaScript for Web Developers",
+    "isbn": "9781118026694",
+    "author": "Matt Frisbie",
+    "description": "Advanced JavaScript concepts and practices",
+    "category": "TECHNOLOGY",
+    "price": 44.99,
     "metadata": {
-        "genre": ["Classic", "Literary Fiction"]
+        "genre": ["Programming", "Web Development"]
     }
 }
 
@@ -160,3 +160,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5Y
 ### Delete a review admin only
 DELETE http://localhost:6000/api/reviews/6729bd2454776b61c782d6c9
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
+
+### Search books
+GET http://localhost:6000/api/search?q=The Hobbit
+
+### Search books by category
+GET http://localhost:6000/api/search?category=TECHNOLOGY
+
+### Search books by multiple parameters
+GET http://localhost:6000/api/search?q=clean code&category=TECHNOLOGY&minPrice=10
+
+### Get search suggestions
+GET http://localhost:6000/api/search/suggestions?q=ja
+
