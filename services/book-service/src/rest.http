@@ -5,13 +5,13 @@ GET http://localhost:6000/api/books
 Content-Type: application/json
 
 ### Get a book by ID
-GET http://localhost:6000/api/books/:6729ac1f201e1eb7e4ad7716
+GET http://localhost:6000/api/books/6729ac1f201e1eb7e4ad7716
 Content-Type: application/json
 
 ### Create a book (with admin token)
 POST http://localhost:6000/api/books
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODQyNjIsImV4cCI6MTczMDc4NDg2MiwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.FaEBd242dd67wsE1hL2goZO1G48HZb7I7ZxmdSfT6PU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODUyOTcsImV4cCI6MTczMDc4NTg5NywiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.fImd_zNSrgIOM92HcSj-Sy3G12RNmq3ULK-LZV9k6Wg
 
 {
     "title": "The Great Gatsby",
@@ -25,52 +25,138 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5Y
     }
 }
 
-### Bulk create books
+
+### Bulk Create Books
 POST http://localhost:6000/api/books/bulk
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODUyOTcsImV4cCI6MTczMDc4NTg5NywiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.fImd_zNSrgIOM92HcSj-Sy3G12RNmq3ULK-LZV9k6Wg
 
 {
     "books": [
         {
-            "title": "1984",
-            "isbn": "978-0451524935",
-            "author": "George Orwell",
-            "description": "A dystopian social science fiction novel.",
-            "category": "FICTION",
-            "price": 12.99,
-            "metadata": {
-                "genre": ["Dystopian", "Science Fiction"]
-            }
-        },
-        {
             "title": "The Hobbit",
             "isbn": "978-0547928227",
             "author": "J.R.R. Tolkien",
-            "description": "A fantasy novel about the adventures of Bilbo Baggins.",
+            "description": "A fantasy novel about the adventures of Bilbo Baggins",
             "category": "FICTION",
             "price": 14.99,
             "metadata": {
                 "genre": ["Fantasy", "Adventure"]
+            }
+        },
+        {
+            "title": "Clean Code",
+            "isbn": "978-0132350884",
+            "author": "Robert C. Martin",
+            "description": "A handbook of agile software craftsmanship",
+            "category": "TECHNOLOGY",
+            "price": 34.99,
+            "metadata": {
+                "genre": ["Programming", "Software Engineering"]
+            }
+        },
+        {
+            "title": "Dune",
+            "isbn": "978-0441172719",
+            "author": "Frank Herbert",
+            "description": "A science fiction masterpiece about politics, religion, and power",
+            "category": "FICTION",
+            "price": 12.99,
+            "metadata": {
+                "genre": ["Science Fiction", "Space Opera"]
+            }
+        },
+        {
+            "title": "A Brief History of Time",
+            "isbn": "978-0553380163",
+            "author": "Stephen Hawking",
+            "description": "An exploration of modern physics and the universe",
+            "category": "SCIENCE",
+            "price": 18.99,
+            "metadata": {
+                "genre": ["Physics", "Cosmology"]
             }
         }
     ]
 }
 
 ### Update a book
-PUT http://localhost:6000/api/books/:id
+PUT http://localhost:6000/api/books/6729ac1f201e1eb7e4ad7716
 Content-Type: application/json
-Authorization: Bearer <access_token>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODUyOTcsImV4cCI6MTczMDc4NTg5NywiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.fImd_zNSrgIOM92HcSj-Sy3G12RNmq3ULK-LZV9k6Wg
 
 {
-    "price": 11.99,
-    "description": "Updated description of the book."
+    "title": "Updated Book Title",
+    "description": "This is an updated description for the book",
+    "price": 24.99,
+    "metadata": {
+        "genre": ["Updated Genre", "New Genre"],
+        "featured": true
+    }
 }
 
 ### Delete a book
-DELETE http://localhost:6000/api/books/:id
-Authorization: Bearer <access_token>
+DELETE http://localhost:6000/api/books/6729ac1f201e1eb7e4ad7716
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODUyOTcsImV4cCI6MTczMDc4NTg5NywiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.fImd_zNSrgIOM92HcSj-Sy3G12RNmq3ULK-LZV9k6Wg
 
 ### Get books with filters
 GET http://localhost:6000/api/books?category=FICTION&page=1&limit=10&sortBy=price&sortOrder=desc
 Content-Type: application/json
+
+### Create a review
+POST http://localhost:6000/api/reviews/book/6729b048201e1eb7e4ad7722
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODg1ODgsImV4cCI6MTczMDc4OTE4OCwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.-_Mi-iq-KkvdhvyBTqQ_B6FJECC19jmsVH94WIWtsLw
+
+{
+    "rating": 4,
+    "title": "Great Book!",
+    "comment": "This book was really enjoyable and insightful. Highly recommended!",
+    "tags": ["engaging", "well-written"]
+}
+
+### Vote Review (upvote)
+POST http://localhost:6000/api/reviews/6729bd2454776b61c782d6c9/vote
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
+
+{
+    "voteType": "upvote"
+}
+
+### Vote Review (downvote)
+POST http://localhost:6000/api/reviews/6729bd2454776b61c782d6c9/vote
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
+
+{
+    "voteType": "downvote"
+}
+
+### Report a review
+POST http://localhost:6000/api/reviews/6729bd2454776b61c782d6c9/report
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
+
+{
+    "reason": "Inappropriate content",
+    "details": "Contains offensive language"
+}
+
+### Get all reported reviews (Admin only)
+GET http://localhost:6000/api/reviews/reported
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
+
+### Handle a reported review (Admin only)
+PUT http://localhost:6000/api/reviews/6729bd2454776b61c782d6c9/handle-report
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
+
+{
+    "action": "dismiss",
+    "note": "Content reviewed and found acceptable"
+}
+
+### Delete a review admin only
+DELETE http://localhost:6000/api/reviews/6729bd2454776b61c782d6c9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
