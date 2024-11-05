@@ -20,10 +20,11 @@ app.use(express.urlencoded({ extended: true }))
 // Routes
 const bookRoutes = require('./Routes/Book.route')
 const reviewRoutes = require('./Routes/Review.route')
+const searchRoutes = require('./Routes/Search.route')
 
 app.use('/api/books', bookRoutes)
 app.use('/api/reviews', reviewRoutes)  
-
+app.use('/api/search', searchRoutes)
 // 404 handler
 app.use((req, res, next) => {
     next(createError.NotFound('Route not found'))
