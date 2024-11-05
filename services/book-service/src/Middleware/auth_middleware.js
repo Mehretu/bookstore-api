@@ -19,11 +19,9 @@ const verifyAccessToken = async (req, res, next) => {
             }
         )
 
-        // Set the verified payload from auth service to req.payload
         req.payload = response.data.payload
         
-        // Now you can use req.payload.role for role-based access
-        // And uncomment the checkRole middleware in your routes
+
         next()
     } catch (error) {
         if (error.response) {

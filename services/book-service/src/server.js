@@ -3,8 +3,11 @@ const createError = require('http-errors')
 const cors = require('cors')
 require('dotenv').config()
 require('./Config/init_mongodb')
+const {connectQueue} = require('./Config/rabbitmq')
 
 const app = express()
+
+connectQueue()
 
 // Add request logging middleware
 app.use((req, res, next) => {

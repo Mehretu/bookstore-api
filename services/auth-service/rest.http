@@ -22,9 +22,9 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "vvssdrip.abreham@gmail.com",
+    "email": "abebe.abreham@gmail.com",
     "password": "1234",
-    "role": "admin"
+    "role": "user"
 }
 
 ###Refresh Token Route

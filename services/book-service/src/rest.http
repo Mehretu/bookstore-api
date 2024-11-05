@@ -11,17 +11,21 @@ Content-Type: application/json
 ### Create a book (with admin token)
 POST http://localhost:6000/api/books
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3OTE4MjksImV4cCI6MTczMDc5MjQyOSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.TUmZeQaEAwHgGoOJVomeHST4XsD5QZBI9UFzvnjQwaA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5ZjVhNTc2YzkzYTgwODUxYmZiMGEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MDMxNDEsImV4cCI6MTczMDgwMzc0MSwiYXVkIjoiNjcyOWY1YTU3NmM5M2E4MDg1MWJmYjBhIiwiaXNzIjoibWVocmV0dS5jb20ifQ.QsEv6g3pwQVSuhmnlPGMqeC_OSKOkbiOJiB--UB7054
 
 {
-    "title": "Professional JavaScript for Web Developers",
-    "isbn": "9781118026694",
-    "author": "Matt Frisbie",
-    "description": "Advanced JavaScript concepts and practices",
-    "category": "TECHNOLOGY",
-    "price": 44.99,
+    "title": "Quantum Physics Explained",
+    "author": "Robert Johnson",
+    "isbn": "978-1234567890",
+    "category": "SCIENCE",
+    "price": 34.99,
+    "description": "A deep dive into quantum physics concepts",
     "metadata": {
-        "genre": ["Programming", "Web Development"]
+        "genre": ["Physics", "Quantum Mechanics"],
+        "popularity": {
+            "rating": 0,
+            "reviewCount": 0
+        }
     }
 }
 
@@ -29,7 +33,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5Y
 ### Bulk Create Books
 POST http://localhost:6000/api/books/bulk
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODUyOTcsImV4cCI6MTczMDc4NTg5NywiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.fImd_zNSrgIOM92HcSj-Sy3G12RNmq3ULK-LZV9k6Wg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5ZjVhNTc2YzkzYTgwODUxYmZiMGEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MDMxNDEsImV4cCI6MTczMDgwMzc0MSwiYXVkIjoiNjcyOWY1YTU3NmM5M2E4MDg1MWJmYjBhIiwiaXNzIjoibWVocmV0dS5jb20ifQ.QsEv6g3pwQVSuhmnlPGMqeC_OSKOkbiOJiB--UB7054
 
 {
     "books": [
@@ -104,21 +108,21 @@ GET http://localhost:6000/api/books?category=FICTION&page=1&limit=10&sortBy=pric
 Content-Type: application/json
 
 ### Create a review
-POST http://localhost:6000/api/reviews/book/6729b048201e1eb7e4ad7722
+POST http://localhost:6000/api/reviews/book/6729f6860e828e729dd9eadf
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODg1ODgsImV4cCI6MTczMDc4OTE4OCwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.-_Mi-iq-KkvdhvyBTqQ_B6FJECC19jmsVH94WIWtsLw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5ZjVhNTc2YzkzYTgwODUxYmZiMGEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MDMxNDEsImV4cCI6MTczMDgwMzc0MSwiYXVkIjoiNjcyOWY1YTU3NmM5M2E4MDg1MWJmYjBhIiwiaXNzIjoibWVocmV0dS5jb20ifQ.QsEv6g3pwQVSuhmnlPGMqeC_OSKOkbiOJiB--UB7054
 
 {
     "rating": 4,
     "title": "Great Book!",
-    "comment": "This book was really enjoyable and insightful. Highly recommended!",
+    "comment": "Very practical and useful content",
     "tags": ["engaging", "well-written"]
 }
 
 ### Vote Review (upvote)
-POST http://localhost:6000/api/reviews/6729bd2454776b61c782d6c9/vote
+POST http://localhost:6000/api/reviews/6729f75a0e828e729dd9eae9/vote
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5YTA5Yzg1NTBlYjUxMGNjOWViZDIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA3ODkzODksImV4cCI6MTczMDc4OTk4OSwiYXVkIjoiNjcyOWEwOWM4NTUwZWI1MTBjYzllYmQyIiwiaXNzIjoibWVocmV0dS5jb20ifQ.oE_M8ei4CqowyBOpOw3zw-msSP3cUzH_pyRFFMDtUG8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzI5ZjVhNTc2YzkzYTgwODUxYmZiMGEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MDMxNDEsImV4cCI6MTczMDgwMzc0MSwiYXVkIjoiNjcyOWY1YTU3NmM5M2E4MDg1MWJmYjBhIiwiaXNzIjoibWVocmV0dS5jb20ifQ.QsEv6g3pwQVSuhmnlPGMqeC_OSKOkbiOJiB--UB7054
 
 {
     "voteType": "upvote"
