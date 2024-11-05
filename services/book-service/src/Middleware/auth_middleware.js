@@ -30,5 +30,16 @@ const verifyAccessToken = async (req, res, next) => {
         next(error)
     }
 }
+const checkRole = (allowedRoles) => (req, res, next) => {
+    try {
+        const userRole = req.payload.role
+        if (!allowedRoles.includes(userRole)) {
+            throw createError.Forbidden(`Role ${userRole} is not allowed to access this resource`)
+        }
+        next()
+    } catch (error) {
+        next(error)
+    }
+}
 
 module.exports = { verifyAccessToken }
