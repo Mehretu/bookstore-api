@@ -1,0 +1,175 @@
+paths:
+  /search:
+    get:
+      tags:
+        - Search
+      summary: Search books
+      description: Advanced search for books with multiple filters and sorting options
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Search query text (searches title, author, and description)
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum: [FICTION, NON_FICTION, BIOGRAPHY, SELF_HELP, TECHNOLOGY, HISTORY, MATH, SCIENCE, RELIGION, OTHER]
+          description: Filter by book category
+        - in: query
+          name: author
+          schema:
+            type: string
+          description: Filter by author name
+        - in: query
+          name: genre
+          schema:
+            type: array
+            items:
+              type: string
+          description: Filter by genre(s)
+          style: form
+          explode: true
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+          description: Minimum price filter
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+          description: Maximum price filter
+        - in: query
+          name: minRating
+          schema:
+            type: number
+            minimum: 0
+            maximum: 5
+          description: Minimum rating filter
+        - in: query
+          name: maxRating
+          schema:
+            type: number
+            minimum: 0
+            maximum: 5
+          description: Maximum rating filter
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [price, rating, reviewCount, createdAt]
+            default: createdAt
+          description: Field to sort by
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sort order
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of items per page
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      books:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Book'
+                      pagination:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                            description: Total number of matching books
+                          totalPages:
+                            type: integer
+                            description: Total number of pages
+                          currentPage:
+                            type: integer
+                            description: Current page number
+                          limit:
+                            type: integer
+                            description: Items per page
+
+  /search/suggestions:
+    get:
+      tags:
+        - Search
+      summary: Get search suggestions
+      description: Get auto-complete suggestions based on search query
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+            minLength: 2
+          required: true
+          description: Search query text
+      responses:
+        '200':
+          description: Search suggestions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      suggestions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: Book ID
+                            title:
+                              type: string
+                              description: Book title
+                            author:
+                              type: string
+                              description: Book author
+                            category:
+                              type: string
+                              description: Book category
+                            price:
+                              type: number
+                              description: Book price
+                            displayText:
+                              type: string
+                              description: Formatted display text
+                      query:
+                        type: string
+                        description: Original search query
+                      total:
+                        type: integer
+                        description: Total number of suggestions

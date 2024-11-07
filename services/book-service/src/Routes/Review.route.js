@@ -10,7 +10,7 @@ router.post('/book/:bookId',
     ReviewController.createReview
 )
 
-router.get('book/:bookId',
+router.get('/book/:bookId', 
     ReviewController.getBookReviews
 )
 

@@ -28,7 +28,6 @@ const options = {
       }
     }
   },
-  // Make sure these paths are correct relative to where you run the node process
   apis: [
     './helpers/swagger-docs/*.yml',
     './Routes/*.js'
