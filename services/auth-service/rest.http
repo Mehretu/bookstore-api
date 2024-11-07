@@ -1,7 +1,7 @@
 ###Verify Token Route
 POST http://localhost:5000/auth/verify-token
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJhMjIwNDkzYzAyZGY2MmI4MjcwMTYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MTQ1NDYsImV4cCI6MTczMDgxNjM0NiwiYXVkIjoiNjcyYTIyMDQ5M2MwMmRmNjJiODI3MDE2IiwiaXNzIjoibWVocmV0dS5jb20ifQ.hWmSemm3M4dHtnkMFOJIL2dGn7qgrEO9gQDDPu5SUr0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJjNWM1NjA5MzRlZjUxOWZiNDQzNmIiLCJyb2xlIjoidXNlciIsImlhdCI6MTczMDk2MDUwNCwiZXhwIjoxNzMwOTYyMzA0LCJhdWQiOiI2NzJjNWM1NjA5MzRlZjUxOWZiNDQzNmIiLCJpc3MiOiJtZWhyZXR1LmNvbSJ9.7sWzXv_BS659pXe7aHyHYWQIVvf6A3fST98dn7TYX9
 
 ###Root Route
 GET http://localhost:5000
@@ -21,8 +21,8 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-    "email": "abebech.abreham@gmail.com",
-    "password": "1234",
+    "email": "mehret.abreham@example.com",
+    "password": "password1234",
     "name": "Abebe",
     "role": "admin"
 }
