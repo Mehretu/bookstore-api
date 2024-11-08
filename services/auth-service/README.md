@@ -82,3 +82,40 @@ cd services/auth-service
 ```bash
 npm install
 ```
+
+### 3. Environment Setup
+**Copy environment template**
+```bash
+cp .env.example .env
+```
+**Edit environment variables**
+```bash
+nano .env
+```
+
+### 4. Development Setup
+**Run development setup script**
+```bash
+npm run setup
+```
+> **Important Note about .vault-data**: 
+> The `.vault-data` directory is created automatically by the setup script and contains Vault development data. It's gitignored for security reasons. When you run `npm run setup`, this directory will be created automatically. Do not manually create or modify this directory.
+
+### 5. Start Service
+```bash
+npm start
+```
+## Configuration
+
+### Environment Variables
+Environment variables are stored in the `.env` file. Here's a brief overview of each variable:
+**Server Configuration**
+```bash
+PORT=5000
+```
+**Vault Configuration**
+```bash
+VAULT_ADDR=http://127.0.0.1:8201
+VAULT_TOKEN=<your-vault-token>
+```
+### Vault Secrets Structure
