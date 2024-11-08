@@ -9,9 +9,9 @@ GET http://localhost:6000/api/books/6729ac1f201e1eb7e4ad7716
 Content-Type: application/json
 
 ### Create a book (with admin token)
-POST http://localhost:6000/api/books
+POST http://localhost:8080/api/books
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJhMjIwNDkzYzAyZGY2MmI4MjcwMTYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA4MjExODEsImV4cCI6MTczMDgyMjk4MSwiYXVkIjoiNjcyYTIyMDQ5M2MwMmRmNjJiODI3MDE2IiwiaXNzIjoibWVocmV0dS5jb20ifQ.URH-oIdMNLl5EcnIW1KKUP71TJqg8iFby4nXh7tP1iU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJkYmZkZjY4M2Q4MTRkNzM1NDIxZmYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzEwNjg5OTQsImV4cCI6MTczMTA3MDc5NCwiYXVkIjoiNjcyZGJmZGY2ODNkODE0ZDczNTQyMWZmIiwiaXNzIjoibWVocmV0dS5jb20ifQ.QljSe8scHt90bJNXuBSDQEClssSxpr3a-S91-ByTiiY
 
 {
     "title": "Debug Test Book new tracing",

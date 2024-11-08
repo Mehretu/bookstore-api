@@ -9,25 +9,25 @@ router.get('/:id', BookController.getBookById)
 
 router.post('/',
     verifyAccessToken,
-    checkRole(ROLES.ADMIN), 
+    checkRole([ROLES.ADMIN]), 
     BookController.createBook
 )
 
 router.post('/bulk',
     verifyAccessToken,
-    checkRole(ROLES.ADMIN),
+    checkRole([ROLES.ADMIN]),
     BookController.bulkCreateBooks
 )
 
 router.put('/:id',
     verifyAccessToken,
-    checkRole(ROLES.ADMIN),
+    checkRole([ROLES.ADMIN]),
     BookController.updateBook
 )
 
 router.delete('/:id',
     verifyAccessToken,
-    checkRole(ROLES.ADMIN),
+    checkRole([ROLES.ADMIN]),
     BookController.deleteBook
 )
 

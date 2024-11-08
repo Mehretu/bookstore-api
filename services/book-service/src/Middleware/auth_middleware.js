@@ -9,8 +9,13 @@ const verifyAccessToken = async (req, res, next) => {
 
         const token = req.headers['authorization']
 
+        if(!global.AUTH_SERVICE_URL){
+            console.error('AUTH_SERVICE_URL is not set')
+            return next(createError.InternalServerError('Auth service configuration is missing'))
+        }
+
         const response = await axios.post(
-            `${process.env.AUTH_SERVICE_URL}/auth/verify-token`,
+            `${global.AUTH_SERVICE_URL}/auth/verify-token`,
             {},  // empty body
             {
                 headers: {
@@ -24,8 +29,17 @@ const verifyAccessToken = async (req, res, next) => {
 
         next()
     } catch (error) {
+        console.error('Token verification error:', {
+            message:error.message,
+            response:error.response?.data,
+            code:error.code
+
+        })
         if (error.response) {
             return next(createError(error.response.status, error.response.data.error.message))
+        }
+        if(error.code === 'ECONNREFUSED'){
+            return next(createError.ServiceUnavailable('Auth service is not available'))
         }
         next(error)
     }
