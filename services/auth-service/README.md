@@ -108,7 +108,6 @@ npm start
 ## Configuration
 
 ### Environment Variables
-Environment variables are stored in the `.env` file. Here's a brief overview of each variable:
 **Server Configuration**
 ```bash
 PORT=5000
@@ -119,3 +118,139 @@ VAULT_ADDR=http://127.0.0.1:8201
 VAULT_TOKEN=<your-vault-token>
 ```
 ### Vault Secrets Structure
+```bash
+secret/
+└── auth-service/
+├── jwt/
+│ ├── access_token_secret
+│ └── refresh_token_secret
+├── database/
+│ ├── uri
+│ └── db_name
+└── admin/
+├── email
+├── password
+└── name
+```
+## API Documentation
+
+### Authentication Endpoints
+
+#### Register User
+```http
+POST /auth/register
+Content-Type: application/json
+{
+"email": "user@example.com",
+"password": "securePassword123!",
+"name": "John Doe"
+}
+```
+#### Login
+```http
+POST /auth/login
+Content-Type: application/json
+{
+"email": "user@example.com",
+"password": "securePassword123!"
+}
+```
+
+#### Refresh Token
+```http
+POST /auth/refresh
+Content-Type: application/json
+{
+"refreshToken": "your_refresh_token_here"
+}
+```
+
+#### Logout
+```http
+DELETE /auth/logout
+Content-Type: application/json
+{
+"refreshToken": "your_refresh_token_here"
+}
+```
+## Development Guide
+
+### Running in Development Mode
+***Start with nodemon***
+```bash
+npm run dev
+```
+### Common Development Tasks
+
+#### 1. Adding New Secrets to Vault
+***Access Vault CLI***
+```bash
+vault kv put secret/auth-service/new-secret \
+key1="value1" \
+key2="value2"
+```
+#### 2. Updating JWT Helper
+```javascript
+// helpers/jwt_helper.js
+const newSecret = await vault_helper.readSecret('new-secret')
+```
+
+## Security
+
+### Secret Management
+- All secrets are managed through HashiCorp Vault
+- Development secrets are automatically configured by setup script
+
+### Token Management
+- Access tokens expire after 30 minutes
+- Refresh tokens are stored in Redis
+- Blacklisted tokens are tracked in Redis
+
+## Troubleshooting
+
+### Common Issues
+
+#### 1. Vault Connection Issues
+***Check Vault status***
+```bash
+curl http://127.0.0.1:8201/v1/sys/health
+```
+***Reset development environment***
+```bash
+npm run setup
+```
+
+#### 2. MongoDB Connection Issues
+***Verify MongoDB is running***
+```bash
+mongosh
+```
+***Check Vault secrets***
+```bash
+vault kv list secret/auth-service/database
+```
+
+#### 3. Redis Connection Issues
+***Test Redis connection***
+```bash
+redis-cli ping
+```
+***Clear Redis data***
+```bash
+redis-cli FLUSHALL
+```
+## Production Deployment
+
+### Docker Deployment
+***Build Docker Image***
+```bash
+docker build -t auth-service .
+```
+***Run Docker Container***
+```bash
+docker run -p 5000:5000 \
+-e VAULT_ADDR=http://127.0.0.1:8201 \
+-e VAULT_TOKEN=<your-vault-token> \
+auth-service
+```
+
