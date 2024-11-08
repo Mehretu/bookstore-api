@@ -36,12 +36,11 @@ The Auth Service is a crucial component of the Bookstore API, handling user auth
 
 - 📚 **Documentation**
   - Swagger/OpenAPI documentation
-  - Postman collection
+  - REST Client(VS Code)
   - API documentation
 
 ## Directory Structure
-```
-bash
+```bash
 services/auth-service/
 ├── .vault-data/ # Vault development data (auto-generated)
 ├── Controllers/
@@ -65,4 +64,21 @@ services/auth-service/
 ├── app.js # Main application
 ├── package.json # Dependencies
 └── swagger.js # API documentation
+```
+## Prerequisites
+- Node.js (v16+)
+- MongoDB (v4.4+)
+- Redis (v6+)
+- HashiCorp Vault (v1.12+)
+
+## Installation & Setup
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/mehretu/bookstore-api.git
+cd services/auth-service
+```
+### 2. Install Dependencies
+```bash
+npm install
 ```
