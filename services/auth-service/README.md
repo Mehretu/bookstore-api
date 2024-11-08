@@ -40,7 +40,7 @@ The Auth Service is a crucial component of the Bookstore API, handling user auth
   - API documentation
 
 ## Directory Structure
-
+```
 bash
 services/auth-service/
 ├── .vault-data/ # Vault development data (auto-generated)
@@ -65,3 +65,4 @@ services/auth-service/
 ├── app.js # Main application
 ├── package.json # Dependencies
 └── swagger.js # API documentation
+```
