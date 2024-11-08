@@ -11,7 +11,8 @@
 8. [Development Guide](#development-guide)
 9. [Security](#security)
 10. [Troubleshooting](#troubleshooting)
-11. [Production Deployment](#production-deployment)
+11. [Docker Deployment](#docker-deployment)
+
 
 ## Overview
 The Auth Service is a crucial component of the Bookstore API, handling user authentication, authorization, and session management. It uses JWT for token-based authentication and HashiCorp Vault for secure secret management.
@@ -32,7 +33,6 @@ The Auth Service is a crucial component of the Bookstore API, handling user auth
   - HashiCorp Vault integration
   - Secure secret management
   - Token blacklisting
-  - Rate limiting
 
 - 📚 **Documentation**
   - Swagger/OpenAPI documentation
@@ -239,9 +239,8 @@ redis-cli ping
 ```bash
 redis-cli FLUSHALL
 ```
-## Production Deployment
+## Docker Deployment
 
-### Docker Deployment
 ***Build Docker Image***
 ```bash
 docker build -t auth-service .
