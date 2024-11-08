@@ -126,5 +126,45 @@ module.exports = {
             if(err) return next(err)
             res.json({payload: req.payload})
         })
+    },
+    createAdmin: async (req, res, next) => {
+        const span = trace.getActiveSpan()
+        try {
+            span.setAttribute('operation', 'create_admin')
+            
+            const { email, password, name } = req.body
+    
+            if (!email || !password || !name) {
+                throw createError.BadRequest('All fields are required')
+            }
+    
+            const exists = await User.findOne({ email })
+            if (exists) {
+                throw createError.Conflict('Email already exists')
+            }
+    
+            const user = new User({
+                email,
+                password,  
+                name,
+                role: ROLES.ADMIN
+            })
+    
+            const savedUser = await user.save()
+            
+            // Remove password from response
+            const userResponse = savedUser.toObject()
+            delete userResponse.password
+    
+            span.setAttribute('success', true)
+            res.status(201).json({
+                message: 'Admin created successfully',
+                admin: userResponse
+            })
+        } catch (error) {
+            span.recordException(error)
+            next(error)
+        }
     }
+
 }

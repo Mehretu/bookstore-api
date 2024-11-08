@@ -2,8 +2,30 @@ const JWT = require('jsonwebtoken')
 const createError = require('http-errors')
 const client = require('./init_redis')
 const {ROLES, PERMISSIONS} = require('../../../shared/auth')
+const vault_helper = require('./vault_helper')
+
+let ACCESS_TOKEN_SECRET
+let REFRESH_TOKEN_SECRET
+
+async function initializeSecrets() {
+    try{
+        const jwtSecrets = await vault_helper.readSecret('jwt')
+        ACCESS_TOKEN_SECRET = jwtSecrets.access_token_secret
+        REFRESH_TOKEN_SECRET = jwtSecrets.refresh_token_secret
+        if(!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET){
+            throw new Error('Failed to load JWT secrets from Vault')
+        }
+        console.log('JWT secrets loaded from Vault')
+    } catch (error) {
+        console.error('Failed to load JWT secrets from Vault:', error)
+        throw error
+    }
+}
+
+initializeSecrets()
 
 module.exports = {
+    initializeSecrets,
     signAccessToken: (userId, role = ROLES.USER) => {
         return new Promise((resolve, reject) => {
             const payload = {
@@ -12,16 +34,20 @@ module.exports = {
                 permissions: PERMISSIONS[role]
                 
             }
-            const secret = process.env.ACCESS_TOKEN_SECRET
+            console.log('Using ACCESS_TOKEN_SECRET:', !!ACCESS_TOKEN_SECRET)
+            if(!ACCESS_TOKEN_SECRET){
+                return reject(createError.InternalServerError('JWT secret not found'))
+            }
             const options = {
                 expiresIn: "30m",
                 issuer: "mehretu.com",
                 audience: userId
             }
-            JWT.sign(payload,secret,options,(err,token) => {
+            JWT.sign(payload,ACCESS_TOKEN_SECRET,options,(err,token) => {
                 if(err) {
-                    console.log(err.message)
+                    console.log('JWT sign error:', err.message)
                     reject(createError.InternalServerError())
+                    return
                 }
                 resolve(token)
             })
@@ -34,7 +60,7 @@ module.exports = {
         const bearerToken = authHeader.split(' ')
         const token = bearerToken[1]
 
-        JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
+        JWT.verify(token, ACCESS_TOKEN_SECRET, (err, payload) => {
             if(err) {   
                  const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message
                  return next(createError.Unauthorized(message))   
@@ -49,7 +75,7 @@ module.exports = {
             const payload = {
                 
             }
-            const secret = process.env.REFRESH_TOKEN_SECRET
+            const secret = REFRESH_TOKEN_SECRET
             const options = {
                 expiresIn: "30d",
                 issuer: "mehretu.com",
@@ -74,7 +100,7 @@ module.exports = {
     },
     verifyRefreshToken: (refreshToken) => {
         return new Promise((resolve, reject) => {
-            JWT.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, payload) => {
+            JWT.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, payload) => {
                 if(err) return reject(createError.Unauthorized())
                 const userId = payload.aud
                 

@@ -19,7 +19,8 @@ const UserSchema = new Schema({
     role:{
         type: String,
         enum: Object.values(ROLES),
-        default: ROLES.USER
+        default: ROLES.USER,
+        immutable:true
     },
     name:{
         type: String,
