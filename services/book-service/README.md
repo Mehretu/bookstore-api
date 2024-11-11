@@ -138,25 +138,45 @@ limit: Number // Items per page
 ## Event System
 
 The service publishes events to RabbitMQ for:
-- New book notifications
-- Review updates
-- Content moderation actions
+- New book notifications (when an admin creates a new book)
+
+
 
 ### Event Types
-```javascript
-NEW_BOOK: {
-book: {
-id: String,
-title: String,
-author: String,
-category: String,
-price: Number
+```json
+{
+"book.created": {
+"type": "NEW_BOOK",
+"payload": {
+"book": {
+"id": String,
+"title": String,
+"author": String,
+"category": String,
+"price": Number
 },
-interestedUsers: [String]
+"interestedUsers": [String] // Users who have upvoted reviews in the same category
+}
 }
 }
 ```
-
+This event is published in the `BookController.createBook` method:
+```javascript
+javascript
+await publishEvent('book.created', {
+type: 'NEW_BOOK',
+payload: {
+book: {
+id: savedBook.id,
+title: savedBook.title,
+author: savedBook.author,
+category: savedBook.category,
+price: savedBook.price
+},
+interestedUsers
+}
+})
+```
 ## Security
 
 ### Authentication
