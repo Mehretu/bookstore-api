@@ -1,24 +1,61 @@
-const Redis = require('redis')
+const { createClient } = require('redis')
 
-const redisClient = Redis.createClient({
-    url: process.env.REDIS_URL || 'redis://localhost:6379'
-})
+class RedisManager {
+    constructor() {
+        this.client = null
+    }
 
-redisClient.on('error', (err) => {
-    console.error('Redis Client Error:', err)
-})
+    async connect() {
+        try {
+            if (!global.REDIS_URL) {
+                throw new Error('REDIS_URL not found in global configuration')
+            }
 
-redisClient.on('connect', () => {
-    console.log('Connected to Redis')
-})
+            if (!this.client) {
+                this.client = createClient({
+                    url: global.REDIS_URL
+                })
 
-const connectRedis = async () => {
-    try {
-        await redisClient.connect()
-    } catch (error) {
-        console.error('Redis connection error:', error)
-        setTimeout(connectRedis, 5000) 
+                this.client.on('error', (err) => {
+                    console.error('Redis Client Error:', err)
+                })
+
+                this.client.on('connect', () => {
+                    console.log('✅ Redis connected')
+                })
+
+                this.client.on('ready', () => {
+                    console.log('✅ Redis ready for operations')
+                })
+
+                await this.client.connect()
+                console.log('Redis connected to:', global.REDIS_URL)
+            }
+
+            return this.client
+        } catch (error) {
+            console.error('Redis connection error:', error)
+            throw error
+        }
+    }
+
+    getClient() {
+        return this.client
+    }
+
+    async disconnect() {
+        if (this.client) {
+            await this.client.quit()
+            this.client = null
+            console.log('Redis disconnected')
+        }
     }
 }
 
-module.exports = { redisClient, connectRedis }
+const redisManager = new RedisManager()
+
+module.exports = {
+    connectRedis: () => redisManager.connect(),
+    disconnectRedis: () => redisManager.disconnect(),
+    getRedisClient: () => redisManager.getClient()
+}

@@ -1,35 +1,40 @@
 const mongoose = require('mongoose')
+const vaultHelper = require('../Config/init_vault')
 
-if (!process.env.MONGODB_URI) {
-    console.error('MONGODB_URI is not defined in environment variables')
-    process.exit(1)
+async function initMongoDB() {
+    try {
+        const dbConfig = await vaultHelper.readSecret('database')
+        console.log('Database config:', dbConfig)
+        const mongoUri = dbConfig.mongodb_uri
+        console.log('MongoDB URI:', mongoUri)
+        
+        if (!mongoUri) {
+            throw new Error('MongoDB URI not found in Vault')
+        }
+
+        await mongoose.connect(mongoUri)
+        console.log('MongoDB connected')
+    } catch (err) {
+        console.error('MongoDB connection error:', err.message)
+        throw err
+    }
 }
 
-mongoose
-    .connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => {
-        console.log('MongoDB connected...')
-    })
-    .catch((err) => {
-        console.log(err.message)
-    })
-
 mongoose.connection.on('connected', () => {
-    console.log('Mongoose connected to db...')
+    console.log('Mongoose connected to db')
 })
 
 mongoose.connection.on('error', (err) => {
-    console.log(err.message)
+    console.error('Mongoose error:', err.message)
 })
 
 mongoose.connection.on('disconnected', () => {
-    console.log('Mongoose connection is disconnected...')
+    console.log('Mongoose connection is disconnected')
 })
 
 process.on('SIGINT', async () => {
     await mongoose.connection.close()
     process.exit(0)
 })
+
+module.exports = { initMongoDB }

@@ -1,7 +1,8 @@
 const Notification = require('../Models/Notification.model')
 const socketConfig = require('../Config/socket')
-const { redisClient } = require('../Config/init_redis')
+const { getRedisClient } = require('../Config/init_redis')
 const createError = require('http-errors')
+const CacheHelper = require('../helpers/cache_helper')
 
 module.exports = {
     handleEvent: async (event) => {
@@ -76,38 +77,41 @@ module.exports = {
 
     getNotifications: async (req, res, next) => {
         try {
-            const { page = 1, limit = 10 } = req.query
-            const userId = req.payload.userId
-            const cacheKey = `notifications:${userId}:${page}:${limit}`
+            const { userId } = req.payload
+            const page = parseInt(req.query.page) || 1
+            const limit = parseInt(req.query.limit) || 10
+
+            const cacheKey = CacheHelper.generateCacheKey(
+                'notifications',
+                userId,
+                page.toString(),
+                limit.toString()
+            )
 
             // Try to get from cache
-            const cachedData = await redisClient.get(cacheKey)
+            const cachedData = await CacheHelper.getFromCache(cacheKey)
             if (cachedData) {
-                return res.json(JSON.parse(cachedData))
+                console.log('Cache hit for notifications')
+                return res.json(cachedData)
             }
 
-            const notifications = await Notification.find()
+            // If not in cache, get from database
+            const notifications = await Notification.find({ userId })
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
-                .limit(parseInt(limit))
+                .limit(limit)
 
-            const total = await Notification.countDocuments()
+            const total = await Notification.countDocuments({ userId })
 
             const response = {
-                success: true,
-                data: {
-                    notifications,
-                    pagination: {
-                        total,
-                        totalPages: Math.ceil(total / limit),
-                        currentPage: parseInt(page),
-                        limit: parseInt(limit)
-                    }
-                }
+                notifications,
+                totalPages: Math.ceil(total / limit),
+                currentPage: page,
+                total
             }
 
-            // Cache for 5 minutes
-            await redisClient.setEx(cacheKey, 300, JSON.stringify(response))
+            // Store in cache
+            await CacheHelper.setCache(cacheKey, response)
 
             res.json(response)
         } catch (error) {
@@ -115,30 +119,38 @@ module.exports = {
         }
     },
 
+
     getNotificationsByCategory: async (req, res, next) => {
         try {
             const { category } = req.params
             const { page = 1, limit = 10 } = req.query
             const userId = req.payload.userId
             
-            const cacheKey = `notifications:${userId}:${category}:${page}:${limit}`
-            const cachedData = await redisClient.get(cacheKey)
+            const cacheKey = CacheHelper.generateCacheKey(
+                'notifications', 
+                userId, 
+                category, 
+                page, 
+                limit
+            )
             
+            // Try cache first
+            const cachedData = await CacheHelper.getFromCache(cacheKey)
             if (cachedData) {
-                return res.json(JSON.parse(cachedData))
+                return res.json(cachedData)
             }
-
+    
             const notifications = await Notification.find({
                 'data.category': category
             })
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(parseInt(limit))
-
+    
             const total = await Notification.countDocuments({
                 'data.category': category
             })
-
+    
             const response = {
                 success: true,
                 data: {
@@ -151,9 +163,10 @@ module.exports = {
                     }
                 }
             }
-
-            await redisClient.setEx(cacheKey, 300, JSON.stringify(response))
-
+    
+            // Cache for 5 minutes
+            await CacheHelper.setCache(cacheKey, response, 300)
+    
             res.json(response)
         } catch (error) {
             next(error)
@@ -162,27 +175,25 @@ module.exports = {
 
     getUnreadCount: async (req, res, next) => {
         try {
-            const userId = req.payload.userId
-            const cacheKey = `unread:${userId}`
-
-            const cachedCount = await redisClient.get(cacheKey)
-            if (cachedCount) {
-                return res.json({
-                    success: true,
-                    data: { count: parseInt(cachedCount) }
-                })
+            const { userId } = req.payload
+            const cacheKey = `notifications:${userId}:unread:count` // More specific cache key
+    
+            // Try to get from cache
+            const cachedCount = await CacheHelper.getFromCache(cacheKey)
+            if (cachedCount !== null) {
+                return res.json({ count: parseInt(cachedCount) }) // Ensure it's a number
             }
-
+    
+            // If not in cache, get from database
             const count = await Notification.countDocuments({
+                userId,
                 read: false
             })
-
-            await redisClient.setEx(cacheKey, 60, count.toString()) // Cache for 1 minute
-
-            res.json({
-                success: true,
-                data: { count }
-            })
+    
+            // Store in cache for a shorter duration since this changes frequently
+            await CacheHelper.setCache(cacheKey, count, 60) // Cache for 1 minute
+    
+            res.json({ count })
         } catch (error) {
             next(error)
         }
@@ -190,30 +201,41 @@ module.exports = {
 
     markAsRead: async (req, res, next) => {
         try {
+            const { userId } = req.payload
             const { notificationId } = req.params
-            const userId = req.payload.userId
-
-            const notification = await Notification.findByIdAndUpdate(
-                notificationId,
+    
+            const notification = await Notification.findOneAndUpdate(
+                { _id: notificationId, userId, read: false }, // Add read:false to only update if it was unread
                 { read: true },
                 { new: true }
             )
-
+    
             if (!notification) {
                 throw createError.NotFound('Notification not found')
             }
-
-            // Invalidate relevant caches
-            const cachePattern = `notifications:${userId}:*`
-            const keys = await redisClient.keys(cachePattern)
-            if (keys.length > 0) {
-                await redisClient.del(keys)
-            }
-            await redisClient.del(`unread:${userId}`)
-
+    
+            // Invalidate all related caches
+            await Promise.all([
+                // Invalidate unread count cache
+                CacheHelper.invalidateCache(`notifications:${userId}:unread:count`),
+                // Invalidate notification list caches
+                CacheHelper.invalidateCache(`notifications:${userId}:*`),
+                // Invalidate category-specific caches
+                CacheHelper.invalidateCache(`notifications:${userId}:category:*`),
+                // Legacy cache pattern (if still in use)
+                CacheHelper.invalidateCache(`notification:cache:user:${userId}:*`)
+            ])
+    
+            // Get new unread count
+            const unreadCount = await Notification.countDocuments({
+                userId,
+                read: false
+            })
+    
             res.json({
                 success: true,
-                data: { notification }
+                notification,
+                unreadCount // Include the new count in the response
             })
         } catch (error) {
             next(error)
@@ -223,23 +245,25 @@ module.exports = {
     markAllAsRead: async (req, res, next) => {
         try {
             const userId = req.payload.userId
-
-            await Notification.updateMany(
-                { read: false },
+    
+            // Update all unread notifications
+            const result = await Notification.updateMany(
+                { userId, read: false },
                 { read: true }
             )
-
-            // Invalidate all user's caches
-            const cachePattern = `notifications:${userId}:*`
-            const keys = await redisClient.keys(cachePattern)
-            if (keys.length > 0) {
-                await redisClient.del(keys)
-            }
-            await redisClient.del(`unread:${userId}`)
-
+    
+            // Invalidate specific caches
+            await Promise.all([
+                CacheHelper.invalidateCache(`notifications:${userId}:unread:count`),
+                CacheHelper.invalidateCache(`notifications:${userId}:*`),
+                CacheHelper.invalidateCache(`notifications:${userId}:category:*`),
+                CacheHelper.invalidateCache(`notification:cache:user:${userId}:*`)
+            ])
+    
             res.json({
                 success: true,
-                message: 'All notifications marked as read'
+                message: 'All notifications marked as read',
+                updated: result.modifiedCount // Add count of updated documents
             })
         } catch (error) {
             next(error)
@@ -257,16 +281,32 @@ module.exports = {
                 throw createError.NotFound('Notification not found')
             }
 
-            // Invalidate relevant caches
-            const cachePattern = `notifications:${userId}:*`
-            const keys = await redisClient.keys(cachePattern)
+            // Use CacheHelper instead of direct Redis client
+            await CacheHelper.invalidateCache(`notifications:${userId}:*`)
+
+            res.json({
+                success: true,
+                message: 'Notification deleted successfully'
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
+    clearAllCaches: async (req, res, next) => {
+        try {
+            const redisClient = getRedisClient()
+            if (!redisClient || !redisClient.isReady) {
+                throw createError.ServiceUnavailable('Cache service not available')
+            }
+
+            const keys = await redisClient.keys('notifications:*')
             if (keys.length > 0) {
                 await redisClient.del(keys)
             }
 
             res.json({
                 success: true,
-                message: 'Notification deleted successfully'
+                message: `Cleared ${keys.length} cache entries`
             })
         } catch (error) {
             next(error)

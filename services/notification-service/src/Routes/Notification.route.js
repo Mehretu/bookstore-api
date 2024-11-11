@@ -2,9 +2,6 @@ const router = require('express').Router()
 const NotificationController = require('../Controllers/Notification.controller')
 const { verifyAccessToken } = require('../Middleware/auth_middleware')
 
-router.get('/health', (req, res) => {
-    res.json({ status: 'OK', service: 'Notification Service' })
-})
 
 router.get('/', 
     verifyAccessToken, 

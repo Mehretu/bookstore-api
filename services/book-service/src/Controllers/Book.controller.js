@@ -3,26 +3,29 @@ const createError = require('http-errors')
 const Book = require('../Models/Book.model')
 const Review = require('../Models/Review.model')
 const { publishEvent } = require('../Config/rabbitmq')
-const { type } = require('os')
 
 async function getInterestedUsers(category) {
     const span = trace.getActiveSpan()
     try {
         span.setAttribute('operation', 'get_Interested_Users')
         span.setAttribute('category', category)
+
+        // Find books in the category
         const booksInCategory = await Book.find({ category })
         const bookIds = booksInCategory.map(book => book._id)
 
-        const reviews = await Review.find({
+        // Find users who gave high ratings (4 or 5) to books in this category
+        const highRatedReviews = await Review.find({
             bookId: { $in: bookIds },
-            'votes.upvotes': { $exists: true, $ne: [] }
+            rating: { $gte: 4 }  // Only consider ratings of 4 or 5
         })
 
+        // Get unique user IDs
         const interestedUsers = [...new Set(
-            reviews.flatMap(review => review.votes.upvotes)
+            highRatedReviews.map(review => review.userId)
         )]
-        span.setAttribute('interested_users_count', interestedUsers.length)
 
+        span.setAttribute('interested_users_count', interestedUsers.length)
         return interestedUsers
     } catch (error) {
         span.recordException(error)
@@ -209,12 +212,39 @@ const BookController = {
             span.setAttribute('books.count', req.body.books.length)
             const { books } = req.body
             const savedBooks = await Book.insertMany(books)
+    
+            // Process notifications for each book
+            await Promise.all(savedBooks.map(async (book) => {
+                const interestedUsers = await getInterestedUsers(book.category)
+                
+                span.setAttribute(`interested_users_count_${book.category}`, interestedUsers.length)
+                
+                if (interestedUsers.length > 0) {
+                    await publishEvent('book.created', {
+                        type: 'NEW_BOOK',
+                        payload: {
+                            book: {
+                                id: book._id,
+                                title: book.title,
+                                author: book.author,
+                                category: book.category,
+                                price: book.price
+                            },
+                            interestedUsers
+                        }
+                    })
+                }
+            }))
+    
             span.setAttributes({
                 'success': true,
-                'books.saved_count': savedBooks.length
+                'books.saved_count': savedBooks.length,
+                'events.published': savedBooks.length
             })
+    
             res.status(201).json(savedBooks)
         } catch (error) {
+            span.recordException(error)
             next(error)
         }
     }

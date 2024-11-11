@@ -4,7 +4,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "setup": "chmod +x src/scripts/dev-setup.sh && src/scripts/dev-setup.sh",
+    "dev": "npm run setup && npm start"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,8 @@
     "mongoose": "^8.8.0",
     "nodemon": "^3.1.7",
     "redis": "^4.7.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }
