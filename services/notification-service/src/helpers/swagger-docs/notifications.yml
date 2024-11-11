@@ -1,0 +1,234 @@
+paths:
+  /health:
+    get:
+      tags:
+        - System
+      summary: Check service health
+      description: Get health status of all service dependencies
+      responses:
+        '200':
+          description: Health status of all services
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [OK, Degraded]
+                  timestamp:
+                    type: string
+                    format: date-time
+                  service:
+                    type: string
+                    example: 'Notification Service'
+                  checks:
+                    type: object
+                    properties:
+                      vault:
+                        type: boolean
+                      redis:
+                        type: boolean
+                      mongodb:
+                        type: boolean
+                      rabbitmq:
+                        type: boolean
+
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get user notifications
+      description: Retrieve a paginated list of user's notifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Items per page
+      responses:
+        '200':
+          description: List of notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  totalPages:
+                    type: integer
+                  currentPage:
+                    type: integer
+                  total:
+                    type: integer
+        '401':
+          description: Unauthorized
+
+  /notifications/category/{category}:
+    get:
+      tags:
+        - Notifications
+      summary: Get notifications by category
+      description: Retrieve notifications filtered by book category
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: category
+          required: true
+          schema:
+            type: string
+            enum: [FICTION, NON_FICTION, BIOGRAPHY, SELF_HELP, TECHNOLOGY, HISTORY, MATH, SCIENCE, RELIGION, OTHER]
+          description: Book category
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Items per page
+      responses:
+        '200':
+          description: Category notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  totalPages:
+                    type: integer
+                  currentPage:
+                    type: integer
+                  total:
+                    type: integer
+        '401':
+          description: Unauthorized
+
+  /notifications/unread/count:
+    get:
+      tags:
+        - Notifications
+      summary: Get unread count
+      description: Get count of unread notifications for the user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Unread count retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 5
+        '401':
+          description: Unauthorized
+
+  /notifications/{notificationId}/read:
+    put:
+      tags:
+        - Notifications
+      summary: Mark notification as read
+      description: Mark a specific notification as read
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: ID of the notification to mark as read
+      responses:
+        '200':
+          description: Notification marked as read successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Notification not found
+
+  /notifications/mark-all-read:
+    put:
+      tags:
+        - Notifications
+      summary: Mark all as read
+      description: Mark all notifications as read for the user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: All notifications marked as read successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'All notifications marked as read'
+        '401':
+          description: Unauthorized
+
+  /notifications/{notificationId}:
+    delete:
+      tags:
+        - Notifications
+      summary: Delete notification
+      description: Delete a specific notification
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: ID of the notification to delete
+      responses:
+        '200':
+          description: Notification deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Notification deleted successfully'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Notification not found
