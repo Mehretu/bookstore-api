@@ -4,7 +4,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "setup": "./src/scripts/dev-setup.sh"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "express": "^4.21.1",
     "helmet": "^8.0.0",
     "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.0",
     "morgan": "^1.10.0",
     "rate-limiter-flexible": "^5.0.4",

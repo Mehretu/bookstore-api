@@ -1,20 +1,29 @@
 const express = require('express')
+const cors = require('cors')
 const createError = require('http-errors')
-require('./tracing')
+const integrationRoutes = require('./Routes/Integration.route')
 
 const app = express()
 
 // Middleware
+app.use(cors())
 app.use(express.json())
 
-// Mount routes
-app.use('/api/integrations', require('./Routes/Integration.route'))
+// Routes
+app.use('/api', integrationRoutes)
 
-// Error handling
+// 404 handler
+app.use((req, res, next) => {
+    next(createError.NotFound('Route not found'))
+})
+
+// Error handler
 app.use((err, req, res, next) => {
     res.status(err.status || 500).json({
-        status: false,
-        message: err.message
+        error: {
+            status: err.status || 500,
+            message: err.message
+        }
     })
 })
 
