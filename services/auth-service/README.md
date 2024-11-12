@@ -11,7 +11,7 @@
 8. [Development Guide](#development-guide)
 9. [Security](#security)
 10. [Troubleshooting](#troubleshooting)
-11. [Docker Deployment](#docker-deployment)
+
 
 
 ## Overview
@@ -239,17 +239,5 @@ redis-cli ping
 ```bash
 redis-cli FLUSHALL
 ```
-## Docker Deployment
 
-***Build Docker Image***
-```bash
-docker build -t auth-service .
-```
-***Run Docker Container***
-```bash
-docker run -p 5000:5000 \
--e VAULT_ADDR=http://127.0.0.1:8201 \
--e VAULT_TOKEN=<your-vault-token> \
-auth-service
-```
 
