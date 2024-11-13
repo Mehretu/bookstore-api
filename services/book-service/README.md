@@ -155,7 +155,7 @@ The service publishes events to RabbitMQ for:
 "category": String,
 "price": Number
 },
-"interestedUsers": [String] // Users who have upvoted reviews in the same category
+"interestedUsers": [String] // Users who gave high ratings (4 or 5) to books in this category
 }
 }
 }
